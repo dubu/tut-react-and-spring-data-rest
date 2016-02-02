@@ -270,7 +270,7 @@ class Employee extends React.Component {
 				<td>{this.props.employee.lastName}</td>
 				<td>{this.props.employee.description}</td>
 				<td>
-					<button onClick={this.handleDelete}>Delete</button>
+					<button onClick={this.handleDelete}>Delete QQ</button>
 				</td>
 			</tr>
 		)
