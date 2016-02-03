@@ -87,8 +87,8 @@ class App extends React.Component {
 			path: employee.entity._links.self.href,
 			entity: updatedEmployee,
 			headers: {
-				'Content-Type': 'application/json',
-				'If-Match': employee.headers.Etag
+				'Content-Type': 'application/json'
+				//,'If-Match': employee.headers.Etag
 			}
 		}).done(response => {
 			/* Let the websocket handler update the state */
@@ -107,6 +107,7 @@ class App extends React.Component {
 
 	// tag::on-delete[]
 	onDelete(employee) {
+		employee.entry = employee;
 		client({method: 'DELETE', path: employee.entity._links.self.href}
 		).done(response => {/* let the websocket handle updating the UI */},
 		response => {
@@ -294,7 +295,7 @@ class UpdateDialog extends React.Component {
 				</p>
 		);
 
-		//console.log(this.props.employee.entity);
+		//console.log(this.props.employee.);
 		var dialogId = "updateEmployee-" + this.props.employee._links.self.href;
 
 
