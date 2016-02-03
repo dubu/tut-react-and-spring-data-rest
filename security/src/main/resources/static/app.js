@@ -1,7 +1,7 @@
 'use strict';
 
 const React = require('react');
-const when = require('when');
+//const when = require('when');
 const client = require('./client');
 
 const follow = require('./follow'); // function to hop multiple links by "rel"
@@ -386,6 +386,7 @@ class EmployeeList extends React.Component {
 						<th>Last Name</th>
 						<th>Description</th>
 						<th>Manager</th>
+						<th>닉네임</th>
 						<th></th>
 						<th></th>
 					</tr>
@@ -418,6 +419,7 @@ class Employee extends React.Component {
 				<td>{this.props.employee.lastName}</td>
 				<td>{this.props.employee.description}</td>
 				<td>{this.props.employee.manager.name}</td>
+				<td>{this.props.employee.nickname}</td>
 				<td>
 					<UpdateDialog employee={this.props.employee}
 								  attributes={this.props.attributes}

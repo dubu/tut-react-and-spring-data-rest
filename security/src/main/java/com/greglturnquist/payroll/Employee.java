@@ -38,6 +38,8 @@ public class Employee {
 	private String lastName;
 	private String description;
 
+	private String nickname;
+
 	private @Version @JsonIgnore Long version;
 
 	private @ManyToOne Manager manager;
