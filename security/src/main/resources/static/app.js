@@ -84,7 +84,7 @@ class App extends React.Component {
 	onUpdate(employee, updatedEmployee) {
 		client({
 			method: 'PUT',
-			path: employee.entity._links.self.href,
+			path: employee._links.self.href,
 			entity: updatedEmployee,
 			headers: {
 				'Content-Type': 'application/json'
@@ -95,10 +95,10 @@ class App extends React.Component {
 		}, response => {
 			if (response.status.code === 403) {
 				alert('ACCESS DENIED: You are not authorized to update ' +
-					employee.entity._links.self.href);
+					employee._links.self.href);
 			}
 			if (response.status.code === 412) {
-				alert('DENIED: Unable to update ' + employee.entity._links.self.href +
+				alert('DENIED: Unable to update ' + employee._links.self.href +
 					'. Your copy is stale.');
 			}
 		});
@@ -107,13 +107,14 @@ class App extends React.Component {
 
 	// tag::on-delete[]
 	onDelete(employee) {
-		employee.entry = employee;
-		client({method: 'DELETE', path: employee.entity._links.self.href}
+		var tmp = employee;
+		tmp.entity = employee;
+		client({method: 'DELETE', path: tmp.entity._links.self.href}
 		).done(response => {/* let the websocket handle updating the UI */},
 		response => {
 			if (response.status.code === 403) {
 				alert('ACCESS DENIED: You are not authorized to delete ' +
-					employee.entity._links.self.href);
+					tmp.entity._links.self.href);
 			}
 		});
 	}
@@ -127,14 +128,7 @@ class App extends React.Component {
 			this.links = employeeCollection.entity._links;
 			this.page = employeeCollection.entity.page;
 
-			return employeeCollection.entity._embedded.employees.map(employee =>
-					client({
-						method: 'GET',
-						path: employee._links.self.href
-					})
-			);
-		}).then(employeePromises => {
-			return when.all(employeePromises);
+			return employeeCollection.entity._embedded.employees;
 		}).done(employees => {
 			this.setState({
 				page: this.page,
@@ -173,14 +167,7 @@ class App extends React.Component {
 			this.links = employeeCollection.entity._links;
 			this.page = employeeCollection.entity.page;
 
-			return employeeCollection.entity._embedded.employees.map(employee => {
-				return client({
-					method: 'GET',
-					path: employee._links.self.href
-				})
-			});
-		}).then(employeePromises => {
-			return when.all(employeePromises);
+			return employeeCollection.entity._embedded.employees;
 		}).then(employees => {
 			this.setState({
 				page: this.page,
