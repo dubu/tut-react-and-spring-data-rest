@@ -14,7 +14,7 @@
 	<groupId>com.greglturnquist</groupId>
 	<artifactId>react-and-spring-data-rest-security</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 
 	<name>React.js and Spring Data REST - Security</name>
 	<description>An SPA with ReactJS in the frontend and Spring Data REST in the backend</description>

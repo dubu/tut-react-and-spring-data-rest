@@ -55,14 +55,7 @@ class App extends React.Component {
 			});
 		}).then(employeeCollection => {
 			this.page = employeeCollection.entity.page;
-			return employeeCollection.entity._embedded.employees.map(employee =>
-					client({
-						method: 'GET',
-						path: employee._links.self.href
-					})
-			);
-		}).then(employeePromises => {
-			return when.all(employeePromises);
+			return employeeCollection.entity._embedded.employees;
 		}).done(employees => {
 			this.setState({
 				page: this.page,
@@ -294,14 +287,16 @@ class UpdateDialog extends React.Component {
 
 	render() {
 		var inputs = this.props.attributes.map(attribute =>
-				<p key={this.props.employee.entity[attribute]}>
+				<p key={this.props.employee[attribute]}>
 					<input type="text" placeholder={attribute}
-						   defaultValue={this.props.employee.entity[attribute]}
+						   defaultValue={this.props.employee[attribute]}
 						   ref={attribute} className="field" />
 				</p>
 		);
 
-		var dialogId = "updateEmployee-" + this.props.employee.entity._links.self.href;
+		//console.log(this.props.employee.entity);
+		var dialogId = "updateEmployee-" + this.props.employee._links.self.href;
+
 
 		return (
 			<div>
@@ -370,8 +365,9 @@ class EmployeeList extends React.Component {
 		var pageInfo = this.props.page.hasOwnProperty("number") ?
 			<h3>Employees - Page {this.props.page.number + 1} of {this.props.page.totalPages}</h3> : null;
 
+		console.log(this.props.employees);
 		var employees = this.props.employees.map(employee =>
-			<Employee key={employee.entity._links.self.href}
+			<Employee key={employee._links.self.href}
 					  employee={employee}
 					  attributes={this.props.attributes}
 					  onUpdate={this.props.onUpdate}
@@ -430,10 +426,10 @@ class Employee extends React.Component {
 	render() {
 		return (
 			<tr>
-				<td>{this.props.employee.entity.firstName}</td>
-				<td>{this.props.employee.entity.lastName}</td>
-				<td>{this.props.employee.entity.description}</td>
-				<td>{this.props.employee.entity.manager.name}</td>
+				<td>{this.props.employee.firstName}</td>
+				<td>{this.props.employee.lastName}</td>
+				<td>{this.props.employee.description}</td>
+				<td>{this.props.employee.manager.name}</td>
 				<td>
 					<UpdateDialog employee={this.props.employee}
 								  attributes={this.props.attributes}
