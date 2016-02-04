@@ -401,7 +401,9 @@ class EmployeeList extends React.Component {
 						<th>First Name</th>
 						<th>Last Name</th>
 						<th>Description</th>
-						<th>Manager</th>
+						<th>Manager AA</th>
+						<th>Phone 번호</th>
+
 						<th></th>
 						<th></th>
 					</tr>
@@ -434,6 +436,7 @@ class Employee extends React.Component {
 				<td>{this.props.employee.entity.lastName}</td>
 				<td>{this.props.employee.entity.description}</td>
 				<td>{this.props.employee.entity.manager.name}</td>
+				<td>{this.props.employee.entity.phoneNumber}</td>
 				<td>
 					<UpdateDialog employee={this.props.employee}
 								  attributes={this.props.attributes}
