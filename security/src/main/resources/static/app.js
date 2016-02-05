@@ -1,7 +1,6 @@
 'use strict';
 
 const React = require('react');
-const when = require('when');
 const client = require('./client');
 
 const follow = require('./follow'); // function to hop multiple links by "rel"
@@ -55,14 +54,7 @@ class App extends React.Component {
 			});
 		}).then(employeeCollection => {
 			this.page = employeeCollection.entity.page;
-			return employeeCollection.entity._embedded.employees.map(employee =>
-					client({
-						method: 'GET',
-						path: employee._links.self.href
-					})
-			);
-		}).then(employeePromises => {
-			return when.all(employeePromises);
+			return employeeCollection.entity._embedded.employees;
 		}).done(employees => {
 			this.setState({
 				page: this.page,
@@ -91,11 +83,11 @@ class App extends React.Component {
 	onUpdate(employee, updatedEmployee) {
 		client({
 			method: 'PUT',
-			path: employee.entity._links.self.href,
+			path: employee._links.self.href,
 			entity: updatedEmployee,
 			headers: {
-				'Content-Type': 'application/json',
-				'If-Match': employee.headers.Etag
+				'Content-Type': 'application/json'
+				//,'If-Match': employee.headers.Etag
 			}
 		}).done(response => {
 			/* Let the websocket handler update the state */
@@ -114,7 +106,7 @@ class App extends React.Component {
 
 	// tag::on-delete[]
 	onDelete(employee) {
-		client({method: 'DELETE', path: employee.entity._links.self.href}
+		client({method: 'DELETE', path: employee._links.self.href}
 		).done(response => {/* let the websocket handle updating the UI */},
 		response => {
 			if (response.status.code === 403) {
@@ -133,14 +125,7 @@ class App extends React.Component {
 			this.links = employeeCollection.entity._links;
 			this.page = employeeCollection.entity.page;
 
-			return employeeCollection.entity._embedded.employees.map(employee =>
-					client({
-						method: 'GET',
-						path: employee._links.self.href
-					})
-			);
-		}).then(employeePromises => {
-			return when.all(employeePromises);
+			return employeeCollection.entity._embedded.employees;
 		}).done(employees => {
 			this.setState({
 				page: this.page,
@@ -179,14 +164,7 @@ class App extends React.Component {
 			this.links = employeeCollection.entity._links;
 			this.page = employeeCollection.entity.page;
 
-			return employeeCollection.entity._embedded.employees.map(employee => {
-				return client({
-					method: 'GET',
-					path: employee._links.self.href
-				})
-			});
-		}).then(employeePromises => {
-			return when.all(employeePromises);
+			return employeeCollection.entity._embedded.employees;
 		}).then(employees => {
 			this.setState({
 				page: this.page,
@@ -294,14 +272,14 @@ class UpdateDialog extends React.Component {
 
 	render() {
 		var inputs = this.props.attributes.map(attribute =>
-				<p key={this.props.employee.entity[attribute]}>
+				<p key={this.props.employee[attribute]}>
 					<input type="text" placeholder={attribute}
-						   defaultValue={this.props.employee.entity[attribute]}
+						   defaultValue={this.props.employee[attribute]}
 						   ref={attribute} className="field" />
 				</p>
 		);
 
-		var dialogId = "updateEmployee-" + this.props.employee.entity._links.self.href;
+		var dialogId = "updateEmployee-" + this.props.employee._links.self.href;
 
 		return (
 			<div>
@@ -371,7 +349,7 @@ class EmployeeList extends React.Component {
 			<h3>Employees - Page {this.props.page.number + 1} of {this.props.page.totalPages}</h3> : null;
 
 		var employees = this.props.employees.map(employee =>
-			<Employee key={employee.entity._links.self.href}
+			<Employee key={employee._links.self.href}
 					  employee={employee}
 					  attributes={this.props.attributes}
 					  onUpdate={this.props.onUpdate}
