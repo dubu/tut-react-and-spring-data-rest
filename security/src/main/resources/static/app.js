@@ -87,7 +87,6 @@ class App extends React.Component {
 			entity: updatedEmployee,
 			headers: {
 				'Content-Type': 'application/json'
-				//,'If-Match': employee.headers.Etag
 			}
 		}).done(response => {
 			/* Let the websocket handler update the state */
